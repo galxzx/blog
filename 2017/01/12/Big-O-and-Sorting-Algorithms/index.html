@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Big O and Sorting Algorithms | From 1000 AD to Fullstack Developer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="IntroductionI first encountered Big O notation in my Fullstack technical interview. I was given a problem that could easily be solved by a nested for loop, but I knew an more elegant/efficient solutio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Big O and Sorting Algorithms">
+<meta property="og:url" content="https://galxzx.github.io/blog/2017/01/12/Big-O-and-Sorting-Algorithms/index.html">
+<meta property="og:site_name" content="From 1000 AD to Fullstack Developer">
+<meta property="og:description" content="IntroductionI first encountered Big O notation in my Fullstack technical interview. I was given a problem that could easily be solved by a nested for loop, but I knew an more elegant/efficient solutio">
+<meta property="og:updated_time" content="2017-01-13T04:02:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Big O and Sorting Algorithms">
+<meta name="twitter:description" content="IntroductionI first encountered Big O notation in my Fullstack technical interview. I was given a problem that could easily be solved by a nested for loop, but I knew an more elegant/efficient solutio">
+  
+    <link rel="alternate" href="/atom.xml" title="From 1000 AD to Fullstack Developer" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/blog/" id="logo">From 1000 AD to Fullstack Developer</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/blog/" id="subtitle">Learning at Fullstack Academy</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/blog/">Home</a>
+        
+          <a class="main-nav-link" href="/blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://galxzx.github.io/blog"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Big-O-and-Sorting-Algorithms" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" class="article-date">
+  <time datetime="2017-01-13T03:03:05.000Z" itemprop="datePublished">2017-01-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Big O and Sorting Algorithms
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>I first encountered Big O notation in my Fullstack technical interview. I was given a problem that could easily be solved by a nested for loop, but I knew an more elegant/efficient solution must have been possible.</p>
+<p>The interviewer mentioned Big O notation and how this was an O of n^2 because we were looping through the array twice. I was eventually able (with significant prodding) to come to a solution that had a Big O of n. Cool, I still didn’t get what Big O was, but I knew that the second function was more efficient.</p>
+<h2 id="What-is-Big-O"><a href="#What-is-Big-O" class="headerlink" title="What is Big O?"></a>What is Big O?</h2><p>Big O can be described as how the time it takes for an algorithm to complete grows as the data set that the algorithm processes grows. Big O accounts for the worst case scenario</p>
+<p>A Big O of 1 means that the algorithm finishes in constant time. It doesn’t matter if the set has 1 item, or 1,000,000 items, it will take the same amount of time to finish. Examples of this are accessing data at an index of an array or accessing data in an ideal hash table. You can go directly to that item without looping or checking any other items. These examples are very simplified and a Big O of 1, doesn’t mean it will be fast, but only that it is constant.</p>
+<p>A Big O of log n indicates that the completion time grows smaller than the data set grows. One example of this is a balanced Binary Search Tree. Since each step in the search allows you to throw out half of the remaining data, doubling the data only increase the completion time by one time step.</p>
+<p>A Big O of n means that the time to complete the algorithm increases linearly with the size of a set. An example of this is searching a linked list. In a worst case scenario, you start with the first node in the list and your result is in the last node. You have then checked every single item in the list.</p>
+<p>A Big O of n log n generally indicates a two step process where one process requires you to touch every single item, but instead of having to do it n times, there is an optimization that allows you to break the other step into smaller pieces. An example of this is a merge sort. To merge the arrays, you will need to touch each of the elements in the array. But do to splitting each array in half, etc., you will only need to merge the arrays log n times, rather than n times, resulting in the product n log n.</p>
+<p>A Big O of n^2 means that you need to touch every single item in the list at least twice. An example is the Bubble Sort search algorithm. At a worst case, you iterate through the n values in the array n times. Each time, bubbling the largest number to the end of the array.</p>
+<p>A Big of n! can be found in algorithms like finding all permutations of an array. Here dynamic programming techniques should come in handy.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="ciyasid8y0003iefncuvo5kzj" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Récent</strong>
+      <div class="article-nav-title">
+        
+          Refactoring a Javascript Calculator
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2017/01/10/Fullstack-Academy-First-Impressions/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">Fullstack Academy First Impressions</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/blog/archives/2017/01/">January 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/blog/2017/01/22/Setting-up-an-Express-server-in-Node/">Setting up an Express server in Node</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2017/01/15/Refactoring-a-Javascript-Calculator/">Refactoring a Javascript Calculator</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2017/01/12/Big-O-and-Sorting-Algorithms/">Big O and Sorting Algorithms</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2017/01/10/Fullstack-Academy-First-Impressions/">Fullstack Academy First Impressions</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2017/01/10/My-first-post-with-hexo/">My first post with hexo</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 Corryn Young<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+  <script src="/blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog/js/script.js"></script>
+
+  </div>
+</body>
+</html>

@@ -52,9 +52,9 @@
       </nav>
       <nav id="sub-nav">
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
       </nav>
       <div id="search-form-wrap">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://galxzx.github.io/blog"></form>
@@ -64,6 +64,147 @@
 </header>
       <div class="outer">
         <section id="main">
+  
+    <article id="post-Setting-up-an-Express-server-in-Node" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" class="article-date">
+  <time datetime="2017-01-22T17:06:26.000Z" itemprop="datePublished">2017-01-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2017/01/22/Setting-up-an-Express-server-in-Node/">Setting up an Express server in Node</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Before-we-begin"><a href="#Before-we-begin" class="headerlink" title="Before we begin"></a>Before we begin</h2><p>You will need to have node and npm (node package manager) installed on your machine.</p>
+<p>If you are unsure about this, check out the npm blog post on the subject,<br><a href="http://blog.npmjs.org/post/85484771375/how-to-install-npm" target="_blank" rel="external">How to Install Npm</a>, but npm should be installed with node itself.</p>
+<p>Because we are using npm to keep track of our dependencies we will need to initialize npm in our project directory.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mkdir yourProject</div><div class="line"><span class="built_in">cd</span> yourProject</div><div class="line">npm init</div></pre></td></tr></table></figure>
+<p>You will then be walked through creating the package.json file for your project. It will auto populate the name as your directory and ask you for some other settings. Just hitting enter until the end will populate package.json with default values. You can edit these later just by opening the file.</p>
+<h2 id="Creating-the-server"><a href="#Creating-the-server" class="headerlink" title="Creating the server"></a>Creating the server</h2><h3 id="app-js"><a href="#app-js" class="headerlink" title="app.js"></a>app.js</h3><p>A standard method to create your express server is to put it in a file called app.js.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">touch app.js</div></pre></td></tr></table></figure>
+<h3 id="Requiring-Express"><a href="#Requiring-Express" class="headerlink" title="Requiring Express"></a>Requiring Express</h3><p>Like all of our dependencies, we will have to install express in our node project and “require” express in app.js. Requiring a file in your file gives you access to that file’s module.exports.<br>In terminal:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install express --save</div></pre></td></tr></table></figure></p>
+<p>In app.js<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</div><div class="line"><span class="keyword">const</span> app = express();</div></pre></td></tr></table></figure></p>
+<p>Notice that since express is an included npm package, we will not need to give it a path. Npm will automatically look in node_modules in the current folder and up the directory chain.<br>We have assigned the returned value of express() to app and this is what we will use to interact with the node server.</p>
+<h3 id="Starting-the-server"><a href="#Starting-the-server" class="headerlink" title="Starting the server"></a>Starting the server</h3><p>app.listen can be used to start the HTTP server and listen on the specified port.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">app.listen(<span class="string">'3333'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'Listening on port 3333'</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>To start the server you would run <figure class="highlight bash"><figcaption><span>node app.js ``` in the terminal.</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">In this <span class="keyword">case</span> port 3333 is on our <span class="built_in">local</span> host so we can access it at [http://localhost:3333](http://localhost:3333). If we navigated there currently, there would be no response from the server, since we haven<span class="string">'t set up any routes.</span></div><div class="line"></div><div class="line">### Adding a route</div><div class="line"></div><div class="line">Express adheres to the restful api and makes it easy to receive and respond to HTTP GET, PUT, POST, and DELETE verbs. An exampe of a simple get request would be in app.js:</div><div class="line">```javascript</div><div class="line">app.get('/<span class="string">', function (req, res)&#123;</span></div><div class="line">  res.send('You\<span class="string">'ve reached the home directory'</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>If you send a get request to <a href="http://localhost:3333" target="_blank" rel="external">http://localhost:3333</a>, such as by opening it in a broswer it will send the response “You’ve reached the home directory!”</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" data-id="ciyasid8s0001iefn416nb39z" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Refactoring-a-Javascript-Calculator" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" class="article-date">
+  <time datetime="2017-01-15T19:02:57.000Z" itemprop="datePublished">2017-01-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2017/01/15/Refactoring-a-Javascript-Calculator/">Refactoring a Javascript Calculator</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Refactoring-a-simple-calculator-web-app"><a href="#Refactoring-a-simple-calculator-web-app" class="headerlink" title="Refactoring a simple calculator web app"></a>Refactoring a simple calculator web app</h2><h3 id="The-Why"><a href="#The-Why" class="headerlink" title="The Why"></a>The Why</h3><p>Before I started Fullstack Academy, I had gone through most of the Free Code Camp front end curriculum. One thing that I found I was missing is a general best practices. It never occurred to me that a calculator could be an object with methods even though I knew how to create objects with method. Free Code Camp gives you some basic tools, but doesn’t tell you if you’re making something smart or just making it hacky.</p>
+<p>Anyway, I’ve decided to refactor the JS, JQuery calculator web app I made for Free Code Camp using a calculator object. If time allows, I will refactor it again as a parser, because… why not?</p>
+<p>The original code pen of the original version can be found here: <a href="http://codepen.io/galxzx/pen/ObWvYx" target="_blank" rel="external">Simple Javascript Calculator</a></p>
+<h3 id="The-calculator-object"><a href="#The-calculator-object" class="headerlink" title="The calculator object"></a>The calculator object</h3><p>In my original version, on each operation, I was putting the total, operator, and new input into a string and evaluating. I had the text field set up so you could only input by button to prevent errors, so this also would have prevented any hacking being done through the input. But honestly, I didn’t even know at the time that a hacker could enter code in a text input that is then passed into an eval statement.</p>
+<p>In the object version I created a calculator object with a total, a next,  and methods to add, subtract, multiply, and divide. Other functionality that was in my original calculator include clear all, clear entry, backspace, and +/-.</p>
+<h4 id="Clearing-the-calculator"><a href="#Clearing-the-calculator" class="headerlink" title="Clearing the calculator"></a>Clearing the calculator</h4><p>Using the object method seems have simplified clearing the calculator, I can just make a new calculator.</p>
+<h4 id="Adding-functionality"><a href="#Adding-functionality" class="headerlink" title="Adding functionality"></a>Adding functionality</h4><p>Each operation button will need to grab the current input value, run the last operation, clear the next value and save the current operation.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">'#plus'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">if</span>(calc.lastOperation)&#123;</div><div class="line">    calc.lastOperation(+calc.next);</div><div class="line">  &#125;<span class="keyword">else</span>&#123;</div><div class="line">    calc.setTotal(+calc.next);</div><div class="line">  &#125;</div><div class="line">  $(<span class="string">'#numberIn'</span>).val(calc.getTotal());</div><div class="line">  calc.next = <span class="string">""</span>;</div><div class="line">  calc.lastOperation = calc.add;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>I then created a runLast function to complete the first 6 lines in the plus click function and used that for minus, divide, multiply, and equals.<br>All the basic functionality of a calculator is now there.</p>
+<h3 id="Next-Steps"><a href="#Next-Steps" class="headerlink" title="Next Steps"></a>Next Steps</h3><p>-I attempted to add the click functions to the number button with a loop but it wasn’t working. I could figure this out.<br>-I could wrap the entire javascript, not just the calculator, inside an object. This would be a good exercise in ‘this’, binding, and arrow functions.<br>-When you click the equals button it stops the chaining and you have to start over. This is a little buggy as you may want to do an operation on your result.</p>
+<p>-Rewrite the calculator as a parser that can handle parentheses.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" data-id="ciyasid900004iefnbi2i5upy" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Big-O-and-Sorting-Algorithms" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" class="article-date">
+  <time datetime="2017-01-13T03:03:05.000Z" itemprop="datePublished">2017-01-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2017/01/12/Big-O-and-Sorting-Algorithms/">Big O and Sorting Algorithms</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>I first encountered Big O notation in my Fullstack technical interview. I was given a problem that could easily be solved by a nested for loop, but I knew an more elegant/efficient solution must have been possible.</p>
+<p>The interviewer mentioned Big O notation and how this was an O of n^2 because we were looping through the array twice. I was eventually able (with significant prodding) to come to a solution that had a Big O of n. Cool, I still didn’t get what Big O was, but I knew that the second function was more efficient.</p>
+<h2 id="What-is-Big-O"><a href="#What-is-Big-O" class="headerlink" title="What is Big O?"></a>What is Big O?</h2><p>Big O can be described as how the time it takes for an algorithm to complete grows as the data set that the algorithm processes grows. Big O accounts for the worst case scenario</p>
+<p>A Big O of 1 means that the algorithm finishes in constant time. It doesn’t matter if the set has 1 item, or 1,000,000 items, it will take the same amount of time to finish. Examples of this are accessing data at an index of an array or accessing data in an ideal hash table. You can go directly to that item without looping or checking any other items. These examples are very simplified and a Big O of 1, doesn’t mean it will be fast, but only that it is constant.</p>
+<p>A Big O of log n indicates that the completion time grows smaller than the data set grows. One example of this is a balanced Binary Search Tree. Since each step in the search allows you to throw out half of the remaining data, doubling the data only increase the completion time by one time step.</p>
+<p>A Big O of n means that the time to complete the algorithm increases linearly with the size of a set. An example of this is searching a linked list. In a worst case scenario, you start with the first node in the list and your result is in the last node. You have then checked every single item in the list.</p>
+<p>A Big O of n log n generally indicates a two step process where one process requires you to touch every single item, but instead of having to do it n times, there is an optimization that allows you to break the other step into smaller pieces. An example of this is a merge sort. To merge the arrays, you will need to touch each of the elements in the array. But do to splitting each array in half, etc., you will only need to merge the arrays log n times, rather than n times, resulting in the product n log n.</p>
+<p>A Big O of n^2 means that you need to touch every single item in the list at least twice. An example is the Bubble Sort search algorithm. At a worst case, you iterate through the n values in the array n times. Each time, bubbling the largest number to the end of the array.</p>
+<p>A Big of n! can be found in algorithms like finding all permutations of an array. Here dynamic programming techniques should come in handy.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="ciyasid8y0003iefncuvo5kzj" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
   
     <article id="post-Fullstack-Academy-First-Impressions" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -99,7 +240,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="cixtmsfay0000v9fn6hblhncb" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="ciyasid8o0000iefn42ebci9w" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -138,7 +279,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="cixtmsfb30001v9fnnlaze3i3" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="ciyasid8w0002iefndfdevjpu" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -183,7 +324,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="cixtmsfb70002v9fn0vsn7yqc" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="ciyasid920005iefnlzbx63r7" class="article-share-link">Partager</a>
       
       
     </footer>
@@ -218,9 +359,21 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
+    <h3 class="widget-title">Articles récents</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/blog/2017/01/22/Setting-up-an-Express-server-in-Node/">Setting up an Express server in Node</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2017/01/15/Refactoring-a-Javascript-Calculator/">Refactoring a Javascript Calculator</a>
+          </li>
+        
+          <li>
+            <a href="/blog/2017/01/12/Big-O-and-Sorting-Algorithms/">Big O and Sorting Algorithms</a>
+          </li>
         
           <li>
             <a href="/blog/2017/01/10/Fullstack-Academy-First-Impressions/">Fullstack Academy First Impressions</a>
@@ -228,10 +381,6 @@
         
           <li>
             <a href="/blog/2017/01/10/My-first-post-with-hexo/">My first post with hexo</a>
-          </li>
-        
-          <li>
-            <a href="/blog/2017/01/10/hello-world/">Hello World</a>
           </li>
         
       </ul>
@@ -247,7 +396,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       &copy; 2017 Corryn Young<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
 </footer>
