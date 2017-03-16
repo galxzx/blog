@@ -94,7 +94,6 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">psql</div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> geoBase</div><div class="line">\<span class="keyword">connect</span> geoBase</div><div class="line"><span class="keyword">CREATE</span> EXTENSION POSTGIS;</div></pre></td></tr></table></figure>
 <p>You will now be blessed with spatial functions and object types in your database. Specifically, you can now use the Sequelize.GEOMETRY and GEOGRAPHY data types and the PostGIS functions are available to you.</p>
 <p>In our database we have list of users at specific “points”. A Sequelize.GEOMETRY(‘POINT’) is stored in your database by first creating a point object and storing it in your db. Sequelize will convert your point into geometry for you. YAY! (LineStrings and Polygons are also valid geometry types)</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> point = &#123;</div><div class="line">  <span class="attr">type</span>: <span class="string">'Point'</span>,</div><div class="line">  <span class="attr">coordinates</span>: [latitude, longitude],</div><div class="line">  <span class="attr">crs</span>: &#123; <span class="attr">type</span>: <span class="string">'name'</span>, <span class="attr">properties</span>: &#123; <span class="attr">name</span>: <span class="string">'EPSG:4326'</span>&#125; &#125;</div><div class="line">&#125;</div><div class="line">User.create(&#123;<span class="attr">name</span>: <span class="string">"Somebody"</span>, <span class="attr">position</span>: point&#125;)</div></pre></td></tr></table></figure>
 <p>Example Model definition:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> Sequelize = <span class="built_in">require</span>(<span class="string">'sequelize'</span>)</div><div class="line"><span class="keyword">const</span> db = <span class="built_in">require</span>(<span class="string">'./_db'</span>)</div><div class="line"></div><div class="line"><span class="keyword">const</span> Alert = db.define(<span class="string">'alert'</span>, &#123;</div><div class="line">  <span class="attr">deviceId</span>: Sequelize.STRING,</div><div class="line">  <span class="attr">position</span>: Sequelize.GEOMETRY(<span class="string">'POINT'</span>, <span class="number">4326</span>),</div><div class="line">  <span class="attr">codename</span>: Sequelize.STRING,</div><div class="line">  <span class="attr">message</span>: Sequelize.STRING</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = Alert</div></pre></td></tr></table></figure>
 <p>If you get an error that type Geometry does not exist, make sure you go back into psql and enable PostGIS.</p>
@@ -107,7 +106,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/03/15/Distance-Based-Queries-with-PostgreSQL-PostGIS-and-Sequelize/" data-id="cj0bucapy0000eqfn8z4m01gt" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/03/15/Distance-Based-Queries-with-PostgreSQL-PostGIS-and-Sequelize/" data-id="cj0buf1wi0001gyfnpqn1un4o" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/distance-sequelize-postgresql-postgis/">distance, sequelize, postgresql, postgis</a></li></ul>
@@ -160,7 +159,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" data-id="cj0bucaqg0007eqfn7hqo6abq" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" data-id="cj0buf1wx0006gyfn9o1gaqc8" class="article-share-link">Share</a>
       
       
     </footer>
@@ -207,7 +206,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" data-id="cj0bucaqe0005eqfnk0c0g1rx" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" data-id="cj0buf1wv0005gyfnwjlshhr9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -252,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="cj0bucaq30001eqfn7zli1jr6" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="cj0buf1wd0000gyfn9ozok8zq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -296,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="cj0bucaqa0003eqfnsvgmml5t" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="cj0buf1wl0002gyfnfvlewyx4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -335,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="cj0bucaqb0004eqfn99o4388g" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="cj0buf1wr0004gyfnvpasmytz" class="article-share-link">Share</a>
       
       
     </footer>
@@ -380,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="cj0bucaqj0008eqfnvstd92wv" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="cj0buf1x30008gyfnd0wj0pbo" class="article-share-link">Share</a>
       
       
     </footer>
