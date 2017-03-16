@@ -100,13 +100,13 @@
 <p>We are using the 4326 SRID which will give us distances in degrees. We can then convert to our distance unit of choice.</p>
 <p>Creating points in the db:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">router.post(<span class="string">'/alerts'</span>, (req, res, next) =&gt; &#123;</div><div class="line">  <span class="keyword">let</span> point = &#123;</div><div class="line">    <span class="attr">type</span>: <span class="string">'Point'</span>,</div><div class="line">    <span class="attr">coordinates</span>: [req.body.long, req.body.lat],</div><div class="line">    <span class="attr">crs</span>: &#123; <span class="attr">type</span>: <span class="string">'name'</span>, <span class="attr">properties</span>: &#123; <span class="attr">name</span>: <span class="string">'EPSG:4326'</span>&#125; &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  Alert.create(&#123;</div><div class="line">    <span class="attr">message</span>: req.body.message,</div><div class="line">    <span class="attr">codename</span>: req.body.message,</div><div class="line">    <span class="attr">position</span>: point</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
-<p>Sample query to find all within 0.032 deg which is approximately 2 miles.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Alert.findAll(&#123;</div><div class="line">        <span class="attr">where</span>: Sequelize.where(</div><div class="line">          Sequelize.fn(<span class="string">'ST_DWithin'</span>, Sequelize.col(<span class="string">'position'</span>), Sequelize.fn(<span class="string">'ST_SetSRID'</span>, Sequelize.fn(<span class="string">'ST_MakePoint'</span>, req.query.long, req.query.lat), <span class="number">4326</span>), <span class="number">0.032</span>), <span class="literal">true</span></div><div class="line">        )</div><div class="line">      &#125;)</div><div class="line">      .then(<span class="function"><span class="params">alerts</span> =&gt;</span> res.send(alerts))</div><div class="line">      .catch(next)</div></pre></td></tr></table></figure></p>
+<p>Sample query to find all within 0.032 deg which is approximately 2 miles.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Alert.findAll(&#123;</div><div class="line">  <span class="attr">where</span>: Sequelize.where(</div><div class="line">    Sequelize.fn(<span class="string">'ST_DWithin'</span>,</div><div class="line">      Sequelize.col(<span class="string">'position'</span>),</div><div class="line">      Sequelize.fn(<span class="string">'ST_SetSRID'</span>,</div><div class="line">        Sequelize.fn(<span class="string">'ST_MakePoint'</span>,</div><div class="line">          req.query.long, req.query.lat),</div><div class="line">        <span class="number">4326</span>),</div><div class="line">      <span class="number">0.032</span>),</div><div class="line">    <span class="literal">true</span>)</div><div class="line">&#125;)</div><div class="line">.then(<span class="function"><span class="params">alerts</span> =&gt;</span> res.send(alerts))</div><div class="line">.catch(next)</div></pre></td></tr></table></figure></p>
 <p>It is very important to note that Sequelize uses the ST_GeomFromGeoJSON PostGIS method to create points. GeoJSON coordinates require that longitude is first and latitude is second. This is counter intuitive to those of us accustomed to using latitude first, but very important when creating points to measure distance. The sequelize docs and issues history also appear to have confused lat/long. The <a href="http://postgis.net/documentation/" target="_blank" rel="external">PostGIS docs</a> and <a href="http://geojson.org/" target="_blank" rel="external">GeoJSON spec</a> are very explicit as to the order.</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/03/15/Distance-Based-Queries-with-PostgreSQL-PostGIS-and-Sequelize/" data-id="cj0buf1wi0001gyfnpqn1un4o" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/03/15/Distance-Based-Queries-with-PostgreSQL-PostGIS-and-Sequelize/" data-id="cj0ce66x50003t5fnau9ilawy" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/distance-sequelize-postgresql-postgis/">distance, sequelize, postgresql, postgis</a></li></ul>
@@ -159,7 +159,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" data-id="cj0buf1wx0006gyfn9o1gaqc8" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" data-id="cj0ce66xh0006t5fn8ku8lvvx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -206,7 +206,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" data-id="cj0buf1wv0005gyfnwjlshhr9" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" data-id="cj0ce66x50004t5fnry13kii9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -251,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="cj0buf1wd0000gyfn9ozok8zq" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="cj0ce66ws0000t5fn1dm5ta1e" class="article-share-link">Share</a>
       
       
     </footer>
@@ -295,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="cj0buf1wl0002gyfnfvlewyx4" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="cj0ce66wy0001t5fn3ntqwcsm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -334,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="cj0buf1wr0004gyfnvpasmytz" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="cj0ce66x20002t5fng8fje28r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -379,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="cj0buf1x30008gyfnd0wj0pbo" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="cj0ce66xi0007t5fn96xuo1nq" class="article-share-link">Share</a>
       
       
     </footer>
