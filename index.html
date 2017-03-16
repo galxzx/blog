@@ -88,16 +88,26 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>This post assumes you are familar enough with node, express, sequelize, and postgreSQl to spin up a basic express server and connect it to a Postgres database using sequelize.</p>
+<p>When I attempted to first create an api that would find users within a certain distance of an alert, I was unable to find any working examples that itegrated Sequelize queries and PostGIS. Below you’ll find an example of how to enable PostGIS and one method of formatting your queries.</p>
 <p>Luckily, most common installations of Postgres include PostGIS, but if you are unlucky head on over to <a href="postgis.net/install">postgis.net/install</a> for instructions. FYI, their first instruction will be to install a current version of Postgres.</p>
 <p>On the command line use psql to create your database and enable PostGIS</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pqsl</div></pre></td></tr></table></figure>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> geoBase</div><div class="line">\<span class="keyword">connect</span> geoBase</div><div class="line"><span class="keyword">CREATE</span> EXTENSION postgis</div></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">psql</div><div class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> geoBase</div><div class="line">\<span class="keyword">connect</span> geoBase</div><div class="line"><span class="keyword">CREATE</span> EXTENSION POSTGIS;</div></pre></td></tr></table></figure>
 <p>You will now be blessed with spatial functions and object types in your database. Specifically, you can now use the Sequelize.GEOMETRY and GEOGRAPHY data types and the PostGIS functions are available to you.</p>
+<p>In our database we have list of users at specific “points”. A Sequelize.GEOMETRY(‘POINT’) is stored in your database by first creating a point object and storing it in your db. Sequelize will convert your point into geometry for you. YAY! (LineStrings and Polygons are also valid geometry types)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> point = &#123;</div><div class="line">  <span class="attr">type</span>: <span class="string">'Point'</span>,</div><div class="line">  <span class="attr">coordinates</span>: [latitude, longitude],</div><div class="line">  <span class="attr">crs</span>: &#123; <span class="attr">type</span>: <span class="string">'name'</span>, <span class="attr">properties</span>: &#123; <span class="attr">name</span>: <span class="string">'EPSG:4326'</span>&#125; &#125;</div><div class="line">&#125;</div><div class="line">User.create(&#123;<span class="attr">name</span>: <span class="string">"Somebody"</span>, <span class="attr">position</span>: point&#125;)</div></pre></td></tr></table></figure>
+<p>Example Model definition:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> Sequelize = <span class="built_in">require</span>(<span class="string">'sequelize'</span>)</div><div class="line"><span class="keyword">const</span> db = <span class="built_in">require</span>(<span class="string">'./_db'</span>)</div><div class="line"></div><div class="line"><span class="keyword">const</span> Alert = db.define(<span class="string">'alert'</span>, &#123;</div><div class="line">  <span class="attr">deviceId</span>: Sequelize.STRING,</div><div class="line">  <span class="attr">position</span>: Sequelize.GEOMETRY(<span class="string">'POINT'</span>, <span class="number">4326</span>),</div><div class="line">  <span class="attr">codename</span>: Sequelize.STRING,</div><div class="line">  <span class="attr">message</span>: Sequelize.STRING</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = Alert</div></pre></td></tr></table></figure>
+<p>If you get an error that type Geometry does not exist, make sure you go back into psql and enable PostGIS.</p>
+<p>We are using the 4326 SRID which will give us distances in degrees. We can then convert to our distance unit of choice.</p>
+<p>Creating points in the db:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">router.post(<span class="string">'/alerts'</span>, (req, res, next) =&gt; &#123;</div><div class="line">  <span class="keyword">let</span> point = &#123;</div><div class="line">    <span class="attr">type</span>: <span class="string">'Point'</span>,</div><div class="line">    <span class="attr">coordinates</span>: [req.body.long, req.body.lat],</div><div class="line">    <span class="attr">crs</span>: &#123; <span class="attr">type</span>: <span class="string">'name'</span>, <span class="attr">properties</span>: &#123; <span class="attr">name</span>: <span class="string">'EPSG:4326'</span>&#125; &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  Alert.create(&#123;</div><div class="line">    <span class="attr">message</span>: req.body.message,</div><div class="line">    <span class="attr">codename</span>: req.body.message,</div><div class="line">    <span class="attr">position</span>: point</div><div class="line">  &#125;)</div></pre></td></tr></table></figure>
+<p>Sample query to find all within 0.032 deg which is approximately 2 miles.<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">Alert.findAll(&#123;</div><div class="line">        <span class="attr">where</span>: Sequelize.where(</div><div class="line">          Sequelize.fn(<span class="string">'ST_DWithin'</span>, Sequelize.col(<span class="string">'position'</span>), Sequelize.fn(<span class="string">'ST_SetSRID'</span>, Sequelize.fn(<span class="string">'ST_MakePoint'</span>, req.query.long, req.query.lat), <span class="number">4326</span>), <span class="number">0.032</span>), <span class="literal">true</span></div><div class="line">        )</div><div class="line">      &#125;)</div><div class="line">      .then(<span class="function"><span class="params">alerts</span> =&gt;</span> res.send(alerts))</div><div class="line">      .catch(next)</div></pre></td></tr></table></figure></p>
+<p>It is very important to note that Sequelize uses the ST_GeomFromGeoJSON PostGIS method to create points. GeoJSON coordinates require that longitude is first and latitude is second. This is counter intuitive to those of us accustomed to using latitude first, but very important when creating points to measure distance. The sequelize docs and issues history also appear to have confused lat/long. The <a href="http://postgis.net/documentation/" target="_blank" rel="external">PostGIS docs</a> and <a href="http://geojson.org/" target="_blank" rel="external">GeoJSON spec</a> are very explicit as to the order.</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/03/15/Distance-Based-Queries-with-PostgreSQL-PostGIS-and-Sequelize/" data-id="cj0bplug800012ffnfvjkw567" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/03/15/Distance-Based-Queries-with-PostgreSQL-PostGIS-and-Sequelize/" data-id="cj0bucapy0000eqfn8z4m01gt" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/distance-sequelize-postgresql-postgis/">distance, sequelize, postgresql, postgis</a></li></ul>
@@ -150,7 +160,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" data-id="cj0bpluha00082ffnaboc7pzv" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/22/Setting-up-an-Express-server-in-Node/" data-id="cj0bucaqg0007eqfn7hqo6abq" class="article-share-link">Share</a>
       
       
     </footer>
@@ -197,7 +207,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" data-id="cj0bpluh500062ffn5nuof978" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/15/Refactoring-a-Javascript-Calculator/" data-id="cj0bucaqe0005eqfnk0c0g1rx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -242,7 +252,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="cj0bplug300002ffnq2fb9ng1" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/12/Big-O-and-Sorting-Algorithms/" data-id="cj0bucaq30001eqfn7zli1jr6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -286,7 +296,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="cj0bplugb00022ffnobdjr18b" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/Fullstack-Academy-First-Impressions/" data-id="cj0bucaqa0003eqfnsvgmml5t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -325,7 +335,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="cj0bplugh00042ffnyqcnssot" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/My-first-post-with-hexo/" data-id="cj0bucaqb0004eqfn99o4388g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -370,7 +380,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="cj0bpluh600072ffndu1ezgk5" class="article-share-link">Share</a>
+      <a data-url="https://galxzx.github.io/blog/blog/2017/01/10/hello-world/" data-id="cj0bucaqj0008eqfnvstd92wv" class="article-share-link">Share</a>
       
       
     </footer>
